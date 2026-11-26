@@ -196,7 +196,9 @@ class Bot:
             # alguns modelos menores resumem sem traduzir: pede de novo, mais firme
             r = self.ia.json(prompt + prompts.INSISTE_PORTUGUES, prompts.SCHEMA_PATCH, imagens)
             if _fora_do_portugues(r):
-                raise RuntimeError("a IA respondeu em coreano duas vezes; não postei para não sair errado")
+                # costuma acontecer quando so o modelo menor esta disponivel: tenta de novo mais tarde
+                raise IAIndisponivel("a IA respondeu em coreano duas vezes; não postei e vou tentar de novo "
+                                     "na próxima hora (os modelos maiores do Gemini estavam ocupados)")
         embeds = embeds_patch(r, cabecalho, item.url, item.imagem, rodape, COR[tipo.value])
         self.discord.enviar("patch", embeds, self._falar(r.get("roteiro_audio", "")))
         if tipo == Tipo.PREVIEW_SEA:
