@@ -205,15 +205,17 @@ class Bot:
         self._aprender(texto, texto_sea, det.publicado or self.agora)
 
     def _texto_kr(self, quando: datetime) -> str:
-        html = self.baixar(URL_LISTA_KR)
-        for item in ler_lista("sa", html or ""):
-            if "업데이트" not in item.titulo:
-                continue
+        """Patch coreano da mesma semana: o maior post de "업데이트" publicado ate 4 dias antes."""
+        candidatos = [i for i in ler_lista("sa", self.baixar(URL_LISTA_KR) or "")
+                      if "업데이트" in i.titulo and "보안" not in i.titulo][:6]
+        melhor = ""
+        for item in candidatos:
             det, texto = self._detalhe("sa", item.url)
-            if det.publicado and timedelta(0) <= quando - det.publicado <= JANELA_PREVIEW:
-                return texto
-            return ""
-        return ""
+            if not det.publicado or quando - det.publicado > JANELA_PREVIEW:
+                break  # listagem vem do mais novo para o mais velho
+            if det.publicado <= quando and len(texto) > len(melhor):
+                melhor = texto
+        return melhor
 
     def _aprender(self, texto_sa: str, texto_sea: str, quando: datetime) -> None:
         try:

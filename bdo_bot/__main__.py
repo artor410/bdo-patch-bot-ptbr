@@ -157,7 +157,7 @@ def glossario_inicial(semanas: int) -> None:
           if "notas da atualiza" in i.titulo.lower()][:semanas]
     sea = [i for i in ler_lista("pa", web.texto(FONTES["sea"].url_lista) or "")
            if "update details" in i.titulo.lower() and "[hotfix]" not in i.titulo.lower()]
-    kr = [i for i in ler_lista("sa", web.texto(URL_LISTA_KR) or "") if "업데이트" in i.titulo]
+    kr = [i for i in ler_lista("sa", web.texto(URL_LISTA_KR) or "") if "업데이트" in i.titulo and "보안" not in i.titulo]
 
     def detalhe(layout, item):
         d = ler_detalhe(layout, web.texto(item.url) or "")
@@ -172,8 +172,10 @@ def glossario_inicial(semanas: int) -> None:
             continue
 
         def perto(lista, dias):
-            return next((t for d, t in lista if d.publicado and timedelta(0) <= d_sa.publicado - d.publicado
-                         <= timedelta(days=dias)), "")
+            # o maior post publicado ate N dias antes do SA (o patch completo, nao um hotfix)
+            textos = [t for d, t in lista if d.publicado and timedelta(0) <= d_sa.publicado - d.publicado
+                      <= timedelta(days=dias)]
+            return max(textos, key=len, default="")
 
         t_sea, t_kr = perto(sea_det, 2), perto(kr_det, 4)
         if not t_sea:
