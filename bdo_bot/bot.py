@@ -24,6 +24,17 @@ GUARDAR_VISTOS = 300
 JANELA_PREVIEW = timedelta(days=4)
 
 
+def _fora_do_portugues(r: dict) -> bool:
+    """True se a resposta tem coreano demais (nomes originais entre parenteses sao aceitos)."""
+    partes = [r.get("titulo_curto", ""), r.get("roteiro_audio", ""), *r.get("destaques", [])]
+    for s in r.get("secoes", []):
+        partes += [s.get("nome", ""), *s.get("itens", [])]
+    texto = " ".join(partes)
+    letras = sum(c.isalpha() for c in texto)
+    hangul = sum("가" <= c <= "힣" for c in texto)
+    return letras > 0 and hangul / letras > 0.15
+
+
 def _mime(dados: bytes) -> str:
     if dados[:8] == b"\x89PNG\r\n\x1a\n":
         return "image/png"
@@ -179,8 +190,13 @@ class Bot:
             cabecalho = f"👀 Preview do update SA {self._data(det)}"
             rodape = "Preview via SEA: o SA costuma receber o mesmo patch ~4h depois"
         imagens = self._imagens(det.corpo_html, evento=False)
-        r = self.ia.json(prompts.patch(texto, idioma, contexto, termos, self.itens(texto, lingua)),
-                         prompts.SCHEMA_PATCH, imagens)
+        prompt = prompts.patch(texto, idioma, contexto, termos, self.itens(texto, lingua))
+        r = self.ia.json(prompt, prompts.SCHEMA_PATCH, imagens)
+        if _fora_do_portugues(r):
+            # alguns modelos menores resumem sem traduzir: pede de novo, mais firme
+            r = self.ia.json(prompt + prompts.INSISTE_PORTUGUES, prompts.SCHEMA_PATCH, imagens)
+            if _fora_do_portugues(r):
+                raise RuntimeError("a IA respondeu em coreano duas vezes; não postei para não sair errado")
         embeds = embeds_patch(r, cabecalho, item.url, item.imagem, rodape, COR[tipo.value])
         self.discord.enviar("patch", embeds, self._falar(r.get("roteiro_audio", "")))
         if tipo == Tipo.PREVIEW_SEA:

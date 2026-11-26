@@ -45,6 +45,13 @@ def _corta(texto: str) -> str:
 _STR = {"type": "STRING"}
 _LISTA = {"type": "ARRAY", "items": _STR}
 
+INSISTE_PORTUGUES = """
+
+ATENÇÃO: sua resposta anterior veio em coreano. Responda SOMENTE em português do Brasil.
+Todos os campos (titulo_curto, destaques, secoes, roteiro_audio) devem estar em português.
+Coreano só é permitido entre parênteses, ao lado de um nome próprio que você traduziu.
+"""
+
 SCHEMA_PATCH = {
     "type": "OBJECT",
     "properties": {
@@ -63,7 +70,8 @@ def patch(texto: str, idioma: str, contexto: str, termos: list[Termo], itens: li
 {_glossario(termos, itens)}
 
 TAREFA: o texto abaixo são as notas de atualização ({contexto}), escritas em {idioma}.
-Traduza e RESUMA para português, para leitura rápida no Discord.
+Traduza e RESUMA para português do Brasil, para leitura rápida no Discord.
+TODA a resposta deve estar em português do Brasil, mesmo que o texto original esteja em outra língua.
 - titulo_curto: até 80 caracteres, o tema principal do patch.
 - destaques: de 3 a 8 tópicos com o que mais importa para o jogador (até 160 caracteres cada).
 - secoes: resumo por área (ex.: Eventos, Classes, Conteúdo, Itens, Sistema, Correções), só as áreas

@@ -315,6 +315,44 @@ def test_termos_so_entram_em_propostos_quando_o_pr_e_confirmado():
     assert bot.estado["termos_propostos"] == ["pit of the undying"]
 
 
+def _post_global_lab():
+    url = FONTES["globallab"].url_lista
+    return {
+        url: lista_pa(("9", "11월 20일(금) 업데이트 안내")),
+        "https://pa/Detail?_boardNo=9": detalhe_pa("11월 20일(금) 업데이트 안내", "<p>불멸의 나락 확장</p>", AGORA),
+    }
+
+
+class IACoreana(IA):
+    """Responde em coreano nas primeiras `teimosia` chamadas."""
+
+    def __init__(self, teimosia):
+        super().__init__()
+        self.teimosia = teimosia
+
+    def json(self, prompt, schema, imagens=None, temperatura=0.3):
+        r = super().json(prompt, schema, imagens, temperatura)
+        if "destaques" in schema["properties"] and len(self.chamadas) <= self.teimosia:
+            r = {"titulo_curto": "불멸의 나락", "destaques": ["불멸의 나락 난이도가 확장되었습니다"],
+                 "secoes": [{"nome": "몬스터", "itens": ["보상 상향"]}], "roteiro_audio": "불멸의 나락"}
+        return r
+
+
+def test_resposta_em_coreano_e_pedida_de_novo_em_portugues():
+    ia = IACoreana(teimosia=1)
+    bot, _ = montar(_post_global_lab(), {"vistos": {"globallab": []}}, ia)
+    bot.rodar(["globallab"])
+    assert len(ia.chamadas) == 2 and "SOMENTE em português" in ia.chamadas[1][0]
+    assert bot.discord.envios[0][1][0]["title"].endswith("Abismo")
+
+
+def test_resposta_que_insiste_em_coreano_nao_e_postada():
+    bot, _ = montar(_post_global_lab(), {"vistos": {"globallab": []}}, IACoreana(teimosia=9))
+    bot.rodar(["globallab"])
+    assert bot.discord.envios == []
+    assert "9" not in bot.estado["vistos"]["globallab"]
+
+
 def test_falha_em_um_post_nao_marca_como_visto_e_vai_para_erros():
     class IAQuebrada(IA):
         def json(self, *a, **k):
