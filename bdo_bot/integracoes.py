@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import re
 import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -120,6 +121,16 @@ def deve_avisar(estado: dict, mensagem: str, agora: datetime, intervalo: timedel
     return True
 
 
+NIVEIS_FALADOS = {"I": "PRI", "II": "DUO", "III": "TRI", "IV": "TET", "V": "PEN",
+                  "VI": "HEX", "VII": "HEP", "VIII": "OCT", "IX": "ENE", "X": "DECA"}
+_NIVEL = re.compile(r"(?<![\w-])(" + "|".join(sorted(NIVEIS_FALADOS, key=len, reverse=True)) + r")(?![\w-])")
+
+
+def para_fala(texto: str) -> str:
+    """Niveis de aprimoramento em romano (V) viram o nome que os jogadores falam (PEN)."""
+    return _NIVEL.sub(lambda m: NIVEIS_FALADOS[m.group(1)], texto)
+
+
 class Audio:
     """Texto -> MP3 com edge-tts; se falhar, WAV com o TTS do Gemini."""
 
@@ -138,6 +149,7 @@ class Audio:
         return bytes(dados)
 
     def __call__(self, texto: str) -> tuple[str, bytes]:
+        texto = para_fala(texto)
         erro: Exception | None = None
         for tentativa in range(3):
             try:

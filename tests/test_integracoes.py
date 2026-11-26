@@ -63,3 +63,13 @@ def test_aviso_de_erro_repetido_so_sai_de_novo_depois_de_6h():
     assert not deve_avisar(estado, "sea: timeout", agora + timedelta(hours=1))
     assert deve_avisar(estado, "sea: timeout", agora + timedelta(hours=7))
     assert deve_avisar(estado, "outro erro", agora + timedelta(hours=1))
+
+
+def test_audio_le_niveis_de_aprimoramento_como_os_jogadores_falam():
+    from bdo_bot.integracoes import para_fala
+
+    assert para_fala("Kzarka V e anel IV") == "Kzarka PEN e anel TET"
+    assert para_fala("V: Kzarka, do I ao X") == "PEN: Kzarka, do PRI ao DECA"
+    assert para_fala("II III VI VII VIII IX") == "DUO TRI HEX HEP OCT ENE"
+    # nao mexe em palavras comuns nem no que ja esta escrito como se fala
+    assert para_fala("Vell VIVO Vida TET: Dandelion") == "Vell VIVO Vida TET: Dandelion"

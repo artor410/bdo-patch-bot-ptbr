@@ -21,7 +21,8 @@ Regras:
 
 _ROTEIRO = ("roteiro_audio: texto para ser LIDO EM VOZ ALTA por um narrador. Sem emojis, sem markdown, "
             "sem links, sem listas com símbolos; escreva números por extenso quando ajudar a leitura. "
-            "Tom de amigo contando a novidade.")
+            "Níveis de aprimoramento se escrevem como se falam: PRI, DUO, TRI, TET, PEN, HEX, HEP, OCT, ENE, DECA "
+            "(nunca I, II, III, IV, V...). Tom de amigo contando a novidade.")
 
 
 def _glossario(termos: list[Termo], itens: list[tuple[str, str]]) -> str:
