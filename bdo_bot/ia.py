@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 API = "https://generativelanguage.googleapis.com/v1beta/models"
 
 # Do melhor para o mais "barato" em cota. Trocavel pela variavel GEMINI_MODELOS (separados por virgula).
-MODELOS_PADRAO = ["gemini-3.8-flash", "gemini-2.5-flash", "gemini-3.5-flash-lite"]
+MODELOS_PADRAO = ["gemini-3.8-flash", "gemini-3.6-flash", "gemini-3.5-flash-lite", "gemini-3.1-flash-lite"]
 MODELOS_TTS_PADRAO = ["gemini-3.8-flash-tts", "gemini-3.8-flash-lite-tts"]
 
 

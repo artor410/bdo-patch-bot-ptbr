@@ -140,7 +140,8 @@ class Bot:
 
     @staticmethod
     def _data(det: Detalhe) -> str:
-        return det.publicado.astimezone(BRASILIA).strftime("%d/%m") if det.publicado else ""
+        # data em UTC: o SEA publica as 23h de Brasilia da vespera, mas o patch e "do dia seguinte"
+        return det.publicado.astimezone(timezone.utc).strftime("%d/%m") if det.publicado else ""
 
     # ------------------------------------------------------------------ tipos
 
