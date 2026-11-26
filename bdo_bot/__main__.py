@@ -130,9 +130,11 @@ def testar_fonte(fonte: str) -> None:
     discord = _discord(tudo_nos_logs=True)
     web = Web()
     itens = ler_lista(FONTES[fonte].layout, web.texto(FONTES[fonte].url_lista) or "")
-    if not itens:
-        sys.exit(f"não achei posts em {fonte} (site em manutenção?)")
-    estado = {"vistos": {fonte: [i.post_id for i in itens[1:]]}, "previews": []}
+    alvo = next((i for i in itens if classificar(fonte, i.titulo) is not None), None)
+    if alvo is None:
+        sys.exit(f"não achei posts que o bot postaria em {fonte} (site em manutenção?)")
+    log.info("testando com: %s", alvo.titulo)
+    estado = {"vistos": {fonte: [i.post_id for i in itens if i.post_id != alvo.post_id]}, "previews": []}
     bot = _montar_bot(estado, discord)
     bot.rodar([fonte])
     _avisar(discord, {}, bot)
