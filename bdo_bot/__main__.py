@@ -2,6 +2,7 @@
 
     python -m bdo_bot rodar [--meia-hora]     checagem normal (GitHub Actions a cada 30 min)
     python -m bdo_bot testar-fonte FONTE      reposta o post mais recente da FONTE no #bot-logs
+    python -m bdo_bot testar-fonte FONTE --publicar   ...no canal de verdade
     python -m bdo_bot testar-vozes            manda um audio de cada voz no #bot-logs
     python -m bdo_bot glossario-inicial N     compara os ultimos N patches SA/SEA/KR e abre um PR de termos
 """
@@ -125,9 +126,10 @@ def rodar(meia_hora: bool) -> None:
     _salvar_estado(estado)
 
 
-def testar_fonte(fonte: str) -> None:
-    """Processa de novo o post mais recente da fonte, mandando tudo para o #bot-logs. Nao mexe no estado."""
-    discord = _discord(tudo_nos_logs=True)
+def testar_fonte(fonte: str, publicar: bool = False) -> None:
+    """Processa de novo o post mais recente da fonte. Nao mexe no estado.
+    Sem --publicar vai tudo para o #bot-logs; com --publicar vai para o canal de verdade."""
+    discord = _discord(tudo_nos_logs=not publicar)
     web = Web()
     itens = ler_lista(FONTES[fonte].layout, web.texto(FONTES[fonte].url_lista) or "")
     alvo = next((i for i in itens if classificar(fonte, i.titulo) is not None), None)
@@ -227,6 +229,7 @@ def main(argv: list[str] | None = None) -> None:
     r.add_argument("--meia-hora", action="store_true")
     t = sub.add_parser("testar-fonte")
     t.add_argument("fonte", choices=list(FONTES))
+    t.add_argument("--publicar", action="store_true")
     sub.add_parser("testar-vozes")
     sub.add_parser("mensagem")
     g = sub.add_parser("glossario-inicial")
@@ -235,7 +238,7 @@ def main(argv: list[str] | None = None) -> None:
     if a.comando == "rodar":
         rodar(a.meia_hora)
     elif a.comando == "testar-fonte":
-        testar_fonte(a.fonte)
+        testar_fonte(a.fonte, a.publicar)
     elif a.comando == "testar-vozes":
         testar_vozes()
     elif a.comando == "mensagem":

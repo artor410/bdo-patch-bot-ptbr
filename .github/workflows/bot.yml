@@ -10,9 +10,9 @@ on:
         description: "O que fazer"
         type: choice
         default: rodar
-        options: [rodar, testar-fonte, testar-vozes, glossario-inicial]
+        options: [rodar, testar-fonte, publicar-fonte, testar-vozes, glossario-inicial]
       fonte:
-        description: "Fonte (só para testar-fonte; o resultado vai para #bot-logs)"
+        description: "Fonte (testar-fonte: vai para #bot-logs; publicar-fonte: reposta o mais recente no canal de verdade)"
         type: choice
         default: sea
         options: [sea, globallab, sa_atualizacao, sa_eventos, sa_loja]
@@ -67,6 +67,7 @@ jobs:
             rodar)
               if [ "$AGENDA" = "30 * * * *" ]; then python -m bdo_bot rodar --meia-hora; else python -m bdo_bot rodar; fi ;;
             testar-fonte) python -m bdo_bot testar-fonte "$FONTE" ;;
+            publicar-fonte) python -m bdo_bot testar-fonte "$FONTE" --publicar ;;
             testar-vozes) python -m bdo_bot testar-vozes ;;
             glossario-inicial) python -m bdo_bot glossario-inicial 4 ;;
           esac
