@@ -17,12 +17,15 @@ Regras:
 - Siglas e gírias da comunidade (AP, DP, PEN, TET, PvP, LoML...) ficam como estão.
 - Não invente nada. Números, datas, horários e quantidades exatamente como no original.
 - Ignore saudações, assinaturas e avisos genéricos.
+- Tom neutro e direto: diga O QUE mudou e pare. Não acrescente objetivo, justificativa, benefício
+  ou opinião que o post não diz ("para garantir um espólio mais justo", "garantindo mais desafio
+  para quem busca o topo", "imperdível", "vai agradar"...). Sem frases de efeito nem empolgação.
 """
 
 _ROTEIRO = ("roteiro_audio: texto para ser LIDO EM VOZ ALTA por um narrador. Sem emojis, sem markdown, "
             "sem links, sem listas com símbolos; escreva números por extenso quando ajudar a leitura. "
             "Níveis de aprimoramento se escrevem como no jogo: PRI, DUO, TRI, TET, PEN, HEX, HEP, OCT, ENE, DEC "
-            "(nunca I, II, III, IV, V...). Tom de amigo contando a novidade.")
+            "(nunca I, II, III, IV, V...). Tom neutro de quem lê um resumo, sem empolgação nem comentários.")
 
 
 def _glossario(termos: list[Termo], itens: list[tuple[str, str]]) -> str:
