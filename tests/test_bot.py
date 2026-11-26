@@ -225,6 +225,96 @@ def test_site_em_manutencao_nao_marca_nada_e_nao_quebra():
     assert bot.discord.envios == []
 
 
+def test_muitos_posts_novos_processa_os_mais_antigos_primeiro():
+    url = FONTES["sa_loja"].url_lista
+    posts = [(str(100 - i), f"Novos Itens da Loja de Pérolas {i}") for i in range(7)]  # 100 = mais novo
+    paginas = {url: lista_sa(*posts)}
+    for pid, t in posts:
+        paginas[f"https://sa/Detail?groupContentNo={pid}&countryType=pt-BR"] = detalhe_sa(t, "<p>x</p>", AGORA)
+    bot, _ = montar(paginas, {"vistos": {"sa_loja": []}})
+    bot.rodar(["sa_loja"])
+    assert bot.estado["vistos"]["sa_loja"] == ["94", "95", "96", "97", "98"]
+    bot.rodar(["sa_loja"])
+    assert bot.estado["vistos"]["sa_loja"][-2:] == ["99", "100"]
+
+
+def test_termos_ja_propostos_nao_voltam_e_a_lista_corta_os_mais_antigos():
+    estado = {"termos_propostos": ["pit of the undying"] + [f"k{i}" for i in range(2500)]}
+    bot, _ = montar({}, estado)
+    bot._aprender("Abismo dos Imortais", "Pit of the Undying", AGORA)
+    assert bot.termos_novos == []
+    bot.termos_novos = [Termo(en="Zeta", pt="Zeta PT")]
+    bot.confirmar_termos_propostos()
+    assert bot.estado["termos_propostos"][-1] == "zeta"
+    assert len(bot.estado["termos_propostos"]) == 2000
+
+
+def test_kr_pula_post_sem_texto_e_acha_o_patch_completo():
+    from bdo_bot.fontes import URL_LISTA_KR
+    paginas = {
+        URL_LISTA_KR: lista_sa(("3", "11월 26일(목) 임시 점검 업데이트 안내"), ("2", "11월 25일(수) 업데이트 안내")),
+        "https://sa/Detail?groupContentNo=3&countryType=pt-BR": detalhe_sa("x", "<img src='a.png'>", AGORA),
+        "https://sa/Detail?groupContentNo=2&countryType=pt-BR": detalhe_sa("y", "<p>패치 전체</p>", AGORA - timedelta(days=1)),
+    }
+    bot, _ = montar(paginas, {})
+    assert bot._texto_kr(AGORA) == "패치 전체"
+
+
+def test_sea_fora_do_ar_na_hora_do_sa_posta_o_sa_completo():
+    sa_url = FONTES["sa_atualizacao"].url_lista
+    estado = {"vistos": {"sa_atualizacao": []},
+              "previews": [{"id": "2", "url": "https://pa/fora", "publicado": (AGORA - timedelta(hours=7)).isoformat()}]}
+    paginas = {
+        sa_url: lista_sa(("11", "Notas da Atualização – 26 de novembro")),
+        "https://sa/Detail?groupContentNo=11&countryType=pt-BR": detalhe_sa("Notas da Atualização", "<p>pt</p>", AGORA),
+    }
+    bot, _ = montar(paginas, estado)
+    bot.rodar(["sa_atualizacao"])
+    assert bot.discord.envios[0][1][0]["title"].startswith("🟢 Update SA")
+    assert "11" in bot.estado["vistos"]["sa_atualizacao"]
+
+
+def test_sea_que_chega_depois_do_sa_nao_vira_preview():
+    sea_url = FONTES["sea"].url_lista
+    estado = {"vistos": {"sea": []}, "ultimo_patch_sa": (AGORA - timedelta(hours=2)).isoformat()}
+    paginas = {
+        sea_url: lista_pa(("2", "November 26, 2026 (Thu) Update Details")),
+        "https://pa/Detail?_boardNo=2": detalhe_pa("November 26, 2026 (Thu) Update Details", "<p>x</p>", AGORA),
+    }
+    bot, _ = montar(paginas, estado)
+    bot.rodar(["sea"])
+    assert bot.discord.envios == []
+    assert "2" in bot.estado["vistos"]["sea"]
+
+
+def test_cota_da_ia_esgotada_nunca_faz_desistir_do_post():
+    from bdo_bot.ia import IAIndisponivel
+
+    class SemCota(IA):
+        def json(self, *a, **k):
+            raise IAIndisponivel("429 quota")
+
+    sa_url = FONTES["sa_atualizacao"].url_lista
+    paginas = {
+        sa_url: lista_sa(("12", "Detalhes da atualização – 27 de Novembro")),
+        "https://sa/Detail?groupContentNo=12&countryType=pt-BR": detalhe_sa("Detalhes", "<p>fix</p>", AGORA),
+    }
+    bot, _ = montar(paginas, {"vistos": {"sa_atualizacao": []}}, SemCota())
+    for _ in range(6):
+        bot.rodar(["sa_atualizacao"])
+    assert "12" not in bot.estado["vistos"]["sa_atualizacao"]
+    # mesma mensagem toda vez: o aviso no #bot-logs pode ser deduplicado
+    assert len(set(bot.erros)) == 1
+
+
+def test_termos_so_entram_em_propostos_quando_o_pr_e_confirmado():
+    bot, _ = montar({}, {})
+    bot._aprender("Abismo dos Imortais", "Pit of the Undying", AGORA)
+    assert bot.termos_novos and bot.estado["termos_propostos"] == []
+    bot.confirmar_termos_propostos()
+    assert bot.estado["termos_propostos"] == ["pit of the undying"]
+
+
 def test_falha_em_um_post_nao_marca_como_visto_e_vai_para_erros():
     class IAQuebrada(IA):
         def json(self, *a, **k):

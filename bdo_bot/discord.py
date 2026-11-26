@@ -44,22 +44,33 @@ def dividir_embeds(embeds: list[dict]) -> list[list[dict]]:
     return grupos
 
 
+class ErroEnvio(RuntimeError):
+    """Nenhum webhook do canal aceitou a mensagem."""
+
+
 class Discord:
     def __init__(self, webhooks: dict[str, list[str]], http: httpx.Client | None = None,
-                 token_bot: str = "", avatar: str = ""):
+                 token_bot: str = "", avatar: str = "", pausa: float = 3.0):
+        self.pausa = pausa
         self.webhooks = webhooks
         self.http = http or httpx.Client(timeout=60)
         self.token_bot = token_bot
         self.avatar = avatar
+        self.avisos: list[str] = []  # problemas nao fatais, para o #bot-logs
 
     def _post(self, url: str, payload: dict, anexo: tuple[str, bytes] | None) -> dict | None:
         for tentativa in range(4):
-            if anexo:
-                r = self.http.post(url, params={"wait": "true"},
-                                   data={"payload_json": json.dumps(payload)},
-                                   files={"files[0]": (anexo[0], anexo[1])})
-            else:
-                r = self.http.post(url, params={"wait": "true"}, json=payload)
+            try:
+                if anexo:
+                    r = self.http.post(url, params={"wait": "true"},
+                                       data={"payload_json": json.dumps(payload)},
+                                       files={"files[0]": (anexo[0], anexo[1])})
+                else:
+                    r = self.http.post(url, params={"wait": "true"}, json=payload)
+            except httpx.TransportError as e:
+                log.warning("falha de rede no Discord: %s", e)
+                time.sleep(self.pausa)
+                continue
             if r.status_code == 429 and tentativa < 3:
                 espera = float((r.json() if r.content else {}).get("retry_after", 2))
                 time.sleep(min(espera, 30))
@@ -73,14 +84,24 @@ class Discord:
     def _publicar(self, msg: dict) -> None:
         if not self.token_bot or not msg or "channel_id" not in msg:
             return
-        r = self.http.post(f"https://discord.com/api/v10/channels/{msg['channel_id']}/messages/{msg['id']}/crosspost",
-                           headers={"Authorization": f"Bot {self.token_bot}"})
-        if r.status_code >= 400 and r.status_code != 400:  # 400 = canal nao e de anuncio
-            log.warning("Nao consegui publicar a mensagem (%s): %s", r.status_code, r.text[:200])
+        try:
+            r = self.http.post(
+                f"https://discord.com/api/v10/channels/{msg['channel_id']}/messages/{msg['id']}/crosspost",
+                headers={"Authorization": f"Bot {self.token_bot}"})
+        except httpx.TransportError as e:
+            self.avisos.append(f"não consegui publicar a mensagem para quem segue o canal: {e}")
+            return
+        if r.status_code > 400:  # 400 so significa "este canal nao e de anuncio"
+            self.avisos.append(f"não consegui publicar a mensagem para quem segue o canal "
+                               f"(HTTP {r.status_code}; o bot tem permissão no canal?)")
 
     def enviar(self, canal: str, embeds: list[dict], anexo: tuple[str, bytes] | None = None,
                texto: str = "") -> int:
-        """Envia para todos os webhooks do canal. Devolve quantas mensagens foram aceitas."""
+        """Envia para todos os webhooks do canal. Devolve quantos webhooks aceitaram.
+
+        Se nenhum aceitar, levanta ErroEnvio (o post sera tentado de novo na proxima execucao).
+        Se ao menos um aceitar, nao levanta: reenviar duplicaria o post nos servidores que ja receberam.
+        """
         urls = [u for u in self.webhooks.get(canal, []) if u]
         if not urls:
             log.warning("Canal %s sem webhook configurado; nada enviado.", canal)
@@ -88,6 +109,7 @@ class Discord:
         aceitas = 0
         grupos = dividir_embeds(embeds) or [[]]
         for url in urls:
+            ok = False
             for i, grupo in enumerate(grupos):
                 payload = {"username": NOME, "embeds": grupo, "allowed_mentions": {"parse": []}}
                 if self.avatar:
@@ -96,6 +118,11 @@ class Discord:
                     payload["content"] = texto[:2000]
                 msg = self._post(url, payload, anexo if i == 0 else None)
                 if msg is not None:
-                    aceitas += 1
+                    ok = True
                     self._publicar(msg)
+            aceitas += ok
+        if aceitas == 0:
+            raise ErroEnvio(f"o Discord recusou o envio para o canal {canal}")
+        if aceitas < len(urls):
+            self.avisos.append(f"{len(urls) - aceitas} de {len(urls)} webhooks do canal {canal} falharam")
         return aceitas

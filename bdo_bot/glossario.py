@@ -23,6 +23,10 @@ class Termo:
     nota: str = ""
     evidencia: str = field(default="", compare=False)
 
+    def chave(self) -> str:
+        """Identidade do termo: o original (coreano ou ingles), normalizado."""
+        return _norm(self.ko or self.en)
+
 
 def _norm(s: str) -> str:
     return re.sub(r"\s+", " ", (s or "").strip().lower())

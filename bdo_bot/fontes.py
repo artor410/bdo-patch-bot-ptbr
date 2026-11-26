@@ -52,11 +52,16 @@ FONTES: dict[str, Fonte] = {
 URL_LISTA_KR = "https://www.kr.playblackdesert.com/ko-KR/News/Notice?boardType=2"
 
 
+def e_patch_kr(titulo: str) -> bool:
+    """Post coreano de atualizacao (Global Lab ou KR ao vivo), sem os de modulo de seguranca."""
+    return "업데이트" in titulo and "보안" not in titulo
+
+
 def classificar(fonte: str, titulo: str) -> Tipo | None:
     t = titulo.strip()
     baixo = t.lower()
     if fonte == "globallab":
-        return Tipo.GLOBAL_LAB if "업데이트" in t and "보안" not in t else None
+        return Tipo.GLOBAL_LAB if e_patch_kr(t) else None
     if fonte == "sea":
         if "[hotfix]" in baixo or "update details" not in baixo:
             return None

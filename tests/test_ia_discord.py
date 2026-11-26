@@ -79,6 +79,22 @@ def test_discord_posta_em_todos_os_webhooks_do_canal_com_anexo_so_na_primeira_me
     assert len(com_anexo) == 2
 
 
+def test_discord_falha_total_levanta_erro_mas_falha_parcial_nao():
+    from bdo_bot.discord import ErroEnvio
+
+    def tratar(req):
+        if "/2/" in str(req.url):
+            raise httpx.ConnectError("caiu")
+        return httpx.Response(200, json={"id": "1", "channel_id": "c"})
+
+    d = Discord({"patch": ["https://discord.com/api/webhooks/1/a", "https://discord.com/api/webhooks/2/b"],
+                 "ruim": ["https://discord.com/api/webhooks/2/b"]},
+                http=httpx.Client(transport=httpx.MockTransport(tratar)), pausa=0)
+    assert d.enviar("patch", [{"title": "t"}]) == 1  # um servidor recebeu: nao reenviar
+    with pytest.raises(ErroEnvio):
+        d.enviar("ruim", [{"title": "t"}])
+
+
 def test_discord_sem_webhook_configurado_nao_quebra():
     d = Discord({"patch": []}, http=httpx.Client(transport=httpx.MockTransport(lambda r: httpx.Response(500))))
     d.enviar("patch", [{"title": "t"}])

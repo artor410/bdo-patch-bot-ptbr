@@ -19,7 +19,7 @@ from pathlib import Path
 from . import prompts
 from .bot import Bot, agora_utc
 from .discord import Discord
-from .fontes import FONTES, URL_LISTA_KR, fontes_para_checar
+from .fontes import FONTES, URL_LISTA_KR, Tipo, classificar, e_patch_kr, fontes_para_checar
 from .formatos import COR
 from .github_pr import abrir_pr_glossario
 from .glossario import Glossario, Termo
@@ -82,23 +82,28 @@ def _montar_bot(estado: dict, discord: Discord) -> Bot:
 
 
 def _avisar(discord: Discord, estado: dict, bot: Bot) -> None:
-    for erro in bot.erros:
+    for erro in bot.erros + discord.avisos:
         log.error(erro)
         if deve_avisar(estado, erro, bot.agora):
-            discord.enviar("logs", [{"title": "⚠️ Problema no bot", "description": erro[:3900], "color": 0xE74C3C}])
+            try:
+                discord.enviar("logs", [{"title": "⚠️ Problema no bot", "description": erro[:3900], "color": 0xE74C3C}])
+            except Exception:  # noqa: BLE001 - sem #bot-logs, o erro fica no log do Actions
+                log.exception("não consegui avisar no #bot-logs")
 
 
-def _pr_termos(discord: Discord, termos: list[Termo], agora) -> None:
+def _pr_termos(discord: Discord, termos: list[Termo], agora) -> bool:
+    """Abre o PR com os termos. Devolve True se os termos podem ser dados como propostos."""
     if not termos:
-        return
+        return True
     repo, token = os.environ.get("GITHUB_REPOSITORY"), os.environ.get("GITHUB_TOKEN")
     if not (repo and token):
         log.info("termos novos (sem GitHub para abrir PR): %s", termos)
-        return
+        return False
     url = abrir_pr_glossario(termos, repo, token, agora.strftime("%Y-%m-%d-%H%M"))
     if url:
         discord.enviar("logs", [{"title": f"📚 {len(termos)} termo(s) novo(s) para aprovar", "url": url,
                                  "description": f"Revise e aprove (Merge) aqui: {url}", "color": COR["lembrete"]}])
+    return True
 
 
 def rodar(meia_hora: bool) -> None:
@@ -112,8 +117,9 @@ def rodar(meia_hora: bool) -> None:
     log.info("checando: %s", fontes or "(nenhuma fonte nesta meia hora; só lembretes)")
     bot.rodar(fontes)
     try:
-        _pr_termos(discord, bot.termos_novos, bot.agora)
-    except Exception as e:  # noqa: BLE001
+        if _pr_termos(discord, bot.termos_novos, bot.agora):
+            bot.confirmar_termos_propostos()
+    except Exception as e:  # noqa: BLE001 - os termos serao sugeridos de novo no proximo patch
         bot.erros.append(f"não consegui abrir o PR do glossário: {e}")
     _avisar(discord, estado, bot)
     _salvar_estado(estado)
@@ -154,10 +160,10 @@ def glossario_inicial(semanas: int) -> None:
     discord = _discord()
     glossario = Glossario.carregar(ARQ_GLOSSARIO)
     sa = [i for i in ler_lista("sa", web.texto(FONTES["sa_atualizacao"].url_lista) or "")
-          if "notas da atualiza" in i.titulo.lower()][:semanas]
+          if classificar("sa_atualizacao", i.titulo) == Tipo.PATCH_SA][:semanas]
     sea = [i for i in ler_lista("pa", web.texto(FONTES["sea"].url_lista) or "")
-           if "update details" in i.titulo.lower() and "[hotfix]" not in i.titulo.lower()]
-    kr = [i for i in ler_lista("sa", web.texto(URL_LISTA_KR) or "") if "업데이트" in i.titulo and "보안" not in i.titulo]
+           if classificar("sea", i.titulo) == Tipo.PREVIEW_SEA]
+    kr = [i for i in ler_lista("sa", web.texto(URL_LISTA_KR) or "") if e_patch_kr(i.titulo)]
 
     def detalhe(layout, item):
         d = ler_detalhe(layout, web.texto(item.url) or "")

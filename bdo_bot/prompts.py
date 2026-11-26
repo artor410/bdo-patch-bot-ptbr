@@ -69,7 +69,7 @@ Traduza e RESUMA para português, para leitura rápida no Discord.
 - secoes: resumo por área (ex.: Eventos, Classes, Conteúdo, Itens, Sistema, Correções), só as áreas
   que existem no texto, no máximo 6 itens curtos por seção. Mudanças de classe: diga a classe e o que
   mudou em poucas palavras (ex.: "Caçadora: dano de Disparo Forte +8% no PvE").
-- {_ROTEIRO} Entre 150 e 280 palavras, cobrindo os destaques.
+- {_ROTEIRO} Entre 160 e 300 palavras (1 a 2 minutos), cobrindo os destaques.
 
 TEXTO ORIGINAL:
 {_corta(texto)}
@@ -107,7 +107,7 @@ TAREFA: o texto abaixo é um evento do site oficial do SA (já em português). R
   Se o post diz "antes da manutenção" de uma quinta, use 03:00 dessa quinta. Se não tem hora, use 23:59.
   Se há vários prazos, use o fim da participação no evento (não o prazo de resgate).
   Se o evento é permanente ou não tem fim, devolva "".
-- {_ROTEIRO} Entre 60 e 140 palavras: o que é, o que fazer, o que ganha e até quando.
+- {_ROTEIRO} Entre 130 e 220 palavras (cerca de 1 minuto): o que é, o que fazer, o que ganha e até quando.
 
 TEXTO DO EVENTO:
 {_corta(texto)}
@@ -168,7 +168,7 @@ O SEA já foi anunciado como preview. Quero saber se o SA trouxe algo diferente.
   números, datas ou recompensas diferentes.
 - conteudo_igual: true se não há diferença real.
 - diferencas: tópicos curtos, começando com "Só no SA:" ou "Não veio para o SA:" ou "Diferente no SA:".
-- {_ROTEIRO} Só se houver diferenças: até 120 palavras explicando o que muda em relação ao preview.
+- {_ROTEIRO} Só se houver diferenças: de 80 a 200 palavras explicando o que muda em relação ao preview.
   Se conteudo_igual for true, devolva "".
 
 PATCH SA:

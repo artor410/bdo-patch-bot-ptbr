@@ -7,7 +7,9 @@ from datetime import datetime, timedelta, timezone
 from typing import Callable
 
 from . import prompts
-from .fontes import FONTES, URL_LISTA_KR, Tipo, classificar
+from .discord import ErroEnvio
+from .ia import IAIndisponivel
+from .fontes import FONTES, URL_LISTA_KR, Tipo, classificar, e_patch_kr
 from .formatos import (BRASILIA, COR, embeds_comparacao, embeds_evento, embeds_hotfix, embeds_loja,
                        embeds_patch, fim_do_evento, lembrete)
 from .glossario import Glossario, Termo
@@ -20,11 +22,6 @@ MAX_POR_FONTE = 5          # posts novos processados por fonte em cada execucao
 MAX_TENTATIVAS = 4         # depois disso o post e marcado como visto e o erro vai para #bot-logs
 GUARDAR_VISTOS = 300
 JANELA_PREVIEW = timedelta(days=4)
-
-CANAL = {
-    Tipo.GLOBAL_LAB: "patch", Tipo.PREVIEW_SEA: "patch", Tipo.PATCH_SA: "patch", Tipo.HOTFIX_SA: "patch",
-    Tipo.EVENTO_SA: "eventos", Tipo.LOJA_SA: "loja",
-}
 
 
 def _mime(dados: bytes) -> str:
@@ -79,8 +76,10 @@ class Bot:
             if nome != "sa_eventos":
                 return
             vistos = self.estado["vistos"][nome]
-        novos = [i for i in itens if i.post_id not in vistos][:MAX_POR_FONTE]
-        for item in reversed(novos):  # do mais antigo para o mais novo
+        # a listagem vem do mais novo para o mais velho: processa os mais antigos primeiro,
+        # no maximo MAX_POR_FONTE por execucao (o resto fica para a proxima)
+        novos = [i for i in itens if i.post_id not in vistos][-MAX_POR_FONTE:]
+        for item in reversed(novos):
             tipo = classificar(nome, item.titulo)
             chave = f"{nome}:{item.post_id}"
             if tipo is not None:
@@ -88,13 +87,17 @@ class Bot:
                     self._processar(nome, tipo, item)
                 except Exception as e:  # noqa: BLE001
                     log.exception("falha em %s", chave)
+                    erro = f"{item.titulo} ({item.url}): {type(e).__name__}: {e}"
+                    if isinstance(e, (IAIndisponivel, ErroEnvio)):
+                        # cota da IA ou Discord fora: problema passageiro, tenta de novo sem limite
+                        self.erros.append(erro)
+                        continue
                     n = self.estado["tentativas"].get(chave, 0) + 1
                     self.estado["tentativas"][chave] = n
-                    desistiu = n >= MAX_TENTATIVAS
-                    self.erros.append(f"{item.titulo} ({item.url}) tentativa {n}"
-                                      f"{' - desisti deste post' if desistiu else ''}: {type(e).__name__}: {e}")
-                    if not desistiu:
+                    if n < MAX_TENTATIVAS:
+                        self.erros.append(erro)
                         continue
+                    self.erros.append(f"Desisti deste post depois de {n} tentativas. {erro}")
             self.estado["tentativas"].pop(chave, None)
             vistos.append(item.post_id)
         del vistos[:-GUARDAR_VISTOS]
@@ -165,6 +168,11 @@ class Bot:
             cabecalho = f"🧪 Global Lab (teste) {self._data(det)}"
             rodape = "Global Lab: servidor de testes, o conteúdo pode mudar antes de chegar ao SA"
         else:
+            ultimo_sa = self.estado.get("ultimo_patch_sa")
+            publicado = det.publicado or self.agora
+            if ultimo_sa and abs(publicado - datetime.fromisoformat(ultimo_sa)) <= timedelta(days=3):
+                log.info("SEA chegou depois do update SA desta semana; nao e mais preview, ignorado")
+                return
             lingua, idioma = "en", "inglês"
             contexto = "servidor SEA; o SA costuma receber o mesmo patch algumas horas depois"
             cabecalho = f"👀 Preview do update SA {self._data(det)}"
@@ -188,7 +196,16 @@ class Bot:
 
     def _patch_sa(self, item: ItemLista, det: Detalhe, texto: str, termos: list[Termo]) -> None:
         titulo = f"Update SA {self._data(det)}".strip()
-        preview = self._preview_da_semana(det.publicado or self.agora)
+        quando = det.publicado or self.agora
+        preview = self._preview_da_semana(quando)
+        texto_sea = ""
+        if preview is not None:
+            try:
+                _, texto_sea = self._detalhe("pa", preview["url"])
+            except Exception as e:  # noqa: BLE001 - sem o SEA, posta o SA completo
+                log.warning("nao consegui reabrir o preview SEA (%s); postando o SA completo", e)
+                preview = None
+        self.estado["ultimo_patch_sa"] = quando.isoformat()
         if preview is None:
             imagens = self._imagens(det.corpo_html, evento=False)
             r = self.ia.json(prompts.patch(texto, "português (texto oficial do SA)", "servidor SA", termos, []),
@@ -196,22 +213,25 @@ class Bot:
             embeds = embeds_patch(r, f"🟢 {titulo}", item.url, item.imagem, "Atualização SA", COR["patch_sa"])
             self.discord.enviar("patch", embeds, self._falar(r.get("roteiro_audio", "")))
             return
-        _, texto_sea = self._detalhe("pa", preview["url"])
         termos_sea = list({t: None for t in termos + self.glossario.relevantes(texto_sea)})
         r = self.ia.json(prompts.comparar(texto, texto_sea, termos_sea), prompts.SCHEMA_COMPARA)
         anexo = None if r.get("conteudo_igual") else self._falar(r.get("roteiro_audio", ""))
         self.discord.enviar("patch", embeds_comparacao(r, titulo, item.url, preview["url"]), anexo)
         preview["usado"] = True
-        self._aprender(texto, texto_sea, det.publicado or self.agora)
+        self._aprender(texto, texto_sea, quando)
 
     def _texto_kr(self, quando: datetime) -> str:
         """Patch coreano da mesma semana: o maior post de "업데이트" publicado ate 4 dias antes."""
-        candidatos = [i for i in ler_lista("sa", self.baixar(URL_LISTA_KR) or "")
-                      if "업데이트" in i.titulo and "보안" not in i.titulo][:6]
+        candidatos = [i for i in ler_lista("sa", self.baixar(URL_LISTA_KR) or "") if e_patch_kr(i.titulo)][:6]
         melhor = ""
         for item in candidatos:
-            det, texto = self._detalhe("sa", item.url)
-            if not det.publicado or quando - det.publicado > JANELA_PREVIEW:
+            try:
+                det, texto = self._detalhe("sa", item.url)
+            except RuntimeError:
+                continue  # aviso so com imagem, pagina fora do ar...
+            if not det.publicado:
+                continue
+            if quando - det.publicado > JANELA_PREVIEW:
                 break  # listagem vem do mais novo para o mais velho
             if det.publicado <= quando and len(texto) > len(melhor):
                 melhor = texto
@@ -225,16 +245,20 @@ class Bot:
                 texto_kr = ""
             conhecidos = self.glossario.relevantes(texto_sa)
             r = self.ia.json(prompts.aprender_termos(texto_sa, texto_sea, texto_kr, conhecidos), prompts.SCHEMA_TERMOS)
-            ja = set(self.estado["termos_propostos"])
+            ja = set(self.estado["termos_propostos"]) | {t.chave() for t in self.termos_novos}
             for t in self.glossario.novos(r.get("termos", [])):
-                chave = (t.ko or t.en).lower()
-                if chave not in ja:
-                    ja.add(chave)
+                if t.chave() not in ja:
+                    ja.add(t.chave())
                     self.termos_novos.append(t)
-            self.estado["termos_propostos"] = sorted(ja)[-2000:]
         except Exception as e:  # noqa: BLE001 - aprender termos nunca impede o post
             log.exception("aprendizado de termos falhou")
             self.erros.append(f"aprendizado de termos falhou: {e}")
+
+    def confirmar_termos_propostos(self) -> None:
+        """Chamar depois que o PR com termos_novos foi aberto: eles nao serao propostos de novo."""
+        propostos: list[str] = self.estado["termos_propostos"]  # em ordem de proposta
+        propostos.extend(t.chave() for t in self.termos_novos if t.chave() not in propostos)
+        del propostos[:-2000]
 
     def _evento(self, item: ItemLista, det: Detalhe, texto: str, termos: list[Termo]) -> None:
         imagens = self._imagens(det.corpo_html, evento=True)
@@ -242,6 +266,9 @@ class Bot:
         fim = fim_do_evento(r.get("fim_brasilia", ""))
         if fim and not (self.agora - timedelta(days=1) < fim < self.agora + timedelta(days=200)):
             fim = None  # data improvavel: melhor nao mostrar contagem errada
+        if not fim and r.get("fim_brasilia"):
+            self.erros.append(f"evento sem data de fim reconhecida (sem contagem e sem lembrete): "
+                              f"{item.titulo} -> {r.get('fim_brasilia')!r}")
         self.discord.enviar("eventos", embeds_evento(r, item.url, item.imagem, fim),
                             self._falar(r.get("roteiro_audio", "")))
         if fim:
