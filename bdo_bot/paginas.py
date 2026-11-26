@@ -66,6 +66,17 @@ def ler_lista(layout: str, html: str) -> list[ItemLista]:
     return itens
 
 
+def ler_classes(html: str) -> dict[int, str]:
+    """Pagina oficial de classes (/GameInfo/Class): {classType: nome da classe naquela regiao}."""
+    sopa = BeautifulSoup(html or "", "html.parser")
+    classes: dict[int, str] = {}
+    for a in sopa.select("ul.select_classes_list a.class_wrap"):
+        nome = a.select_one(".class_name")
+        if a.get("data-name", "").isdigit() and nome and nome.get_text(strip=True):
+            classes[int(a["data-name"])] = _limpa(nome.get_text())
+    return classes
+
+
 _MESES_EN = {m: i for i, m in enumerate(
     ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], 1)}
 

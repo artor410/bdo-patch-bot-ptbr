@@ -1,7 +1,18 @@
 from datetime import datetime, timezone
 from pathlib import Path
 
-from bdo_bot.paginas import ler_detalhe, ler_lista
+from bdo_bot.paginas import ler_classes, ler_detalhe, ler_lista
+
+
+def _classes(*pares):
+    lis = "".join(f'<li><a href="/GameInfo/Class?classType={i}" class="class_wrap" data-name="{i}">'
+                  f'<img alt="{n}"><span class="class_name">{n}</span></a></li>' for i, n in pares)
+    return f'<ul class="select_classes_list">{lis}</ul>'
+
+
+def test_classes_por_id_e_pareamento_entre_linguas():
+    assert ler_classes(_classes((0, "워리어"), (4, "레인저"))) == {0: "워리어", 4: "레인저"}
+    assert ler_classes("<html>manutenção</html>") == {}
 
 FIX = Path(__file__).parent / "fixtures"
 

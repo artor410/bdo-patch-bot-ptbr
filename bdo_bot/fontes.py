@@ -51,6 +51,13 @@ FONTES: dict[str, Fonte] = {
 # Usado so para aprender termos (nunca e postado).
 URL_LISTA_KR = "https://www.kr.playblackdesert.com/ko-KR/News/Notice?boardType=2"
 
+# Paginas oficiais de classes, para o glossario (nomes pareados pelo classType).
+URL_CLASSES = {
+    "ko": "https://www.kr.playblackdesert.com/ko-KR/GameInfo/Class",
+    "en": "https://www.naeu.playblackdesert.com/en-US/GameInfo/Class",
+    "pt": "https://www.sa.playblackdesert.com/pt-BR/GameInfo/Class",
+}
+
 
 def e_patch_kr(titulo: str) -> bool:
     """Post coreano de atualizacao (Global Lab ou KR ao vivo), sem os de modulo de seguranca."""

@@ -19,13 +19,13 @@ from pathlib import Path
 from . import prompts
 from .bot import Bot, agora_utc
 from .discord import Discord
-from .fontes import FONTES, URL_LISTA_KR, Tipo, classificar, e_patch_kr, fontes_para_checar
+from .fontes import FONTES, URL_CLASSES, URL_LISTA_KR, Tipo, classificar, e_patch_kr, fontes_para_checar
 from .formatos import COR
 from .github_pr import abrir_pr_glossario
 from .glossario import Glossario, Termo
 from .ia import MODELOS_PADRAO, Gemini
 from .integracoes import Audio, ItensArsha, Web, deve_avisar
-from .paginas import ler_detalhe, ler_lista
+from .paginas import ler_classes, ler_detalhe, ler_lista
 from .texto import html_para_texto
 
 RAIZ = Path(__file__).resolve().parent.parent
@@ -172,6 +172,15 @@ def glossario_inicial(semanas: int) -> None:
     sea_det = [detalhe("pa", i) for i in sea[: semanas + 2]]
     kr_det = [detalhe("sa", i) for i in kr[: semanas + 4]]
     todos: list[dict] = []
+    # 1) classes: paginas oficiais das tres regioes, pareadas pelo id (sem IA)
+    classes = {lingua: ler_classes(web.texto(url) or "") for lingua, url in URL_CLASSES.items()}
+    if all(classes.values()):
+        for cid, pt in classes["pt"].items():
+            todos.append({"ko": classes["ko"].get(cid, ""), "en": classes["en"].get(cid, ""), "pt": pt,
+                          "tipo": "classe", "evidencia": "páginas oficiais de classes (KR/NA/SA)"})
+    else:
+        log.warning("páginas de classes indisponíveis (manutenção?); classes ficam para a próxima")
+    # 2) demais termos: mesmo patch em SA x SEA x KR, alinhado pela IA
     for item in sa:
         d_sa, t_sa = detalhe("sa", item)
         if not d_sa.publicado:
