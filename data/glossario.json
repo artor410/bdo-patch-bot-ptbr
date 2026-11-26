@@ -232,15 +232,15 @@
     },
     {
       "en": "Absolute: Penetrating Wind",
-      "pt": "Caçadora",
+      "pt": "JIN: Vento Perfurante",
       "tipo": "skill",
-      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Caçadora"
+      "evidencia": "corrigido pelo dono"
     },
     {
       "en": "Flow: Air Explosion Shot",
-      "pt": "Caçadora",
+      "pt": "Fluxo: Explosão Aérea",
       "tipo": "skill",
-      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Caçadora"
+      "evidencia": "corrigido pelo dono"
     },
     {
       "en": "Prime: Decapitation",
@@ -304,9 +304,9 @@
     },
     {
       "en": "Hystria Ruins",
-      "pt": "Praça de Hystria",
+      "pt": "Ruínas Hystria",
       "tipo": "local",
-      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Praça de Hystria"
+      "evidencia": "corrigido pelo dono"
     },
     {
       "en": "Florin Neighborhood Meeting",
@@ -454,9 +454,9 @@
     },
     {
       "en": "Golden Pig",
-      "pt": "Bando de Porcos Dourados",
+      "pt": "Porco Dourado",
       "tipo": "monstro",
-      "evidencia": "Notas da Atualização – 05 de novembro de 2026 (qui.): HP dos monstros do Bando de Porcos Dourados"
+      "evidencia": "corrigido pelo dono"
     },
     {
       "en": "Black Shadow",
@@ -466,9 +466,9 @@
     },
     {
       "en": "Musa",
-      "pt": "Musa",
+      "pt": "Musah",
       "tipo": "classe",
-      "evidencia": "Notas da Atualização – 05 de novembro de 2026 (qui.): barba e o bigode do Musa desapareciam"
+      "evidencia": "corrigido pelo dono"
     },
     {
       "en": "Asula Highlands",
