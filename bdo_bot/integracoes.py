@@ -121,8 +121,12 @@ def deve_avisar(estado: dict, mensagem: str, agora: datetime, intervalo: timedel
     return True
 
 
-NIVEIS_FALADOS = {"I": "PRI", "II": "DUO", "III": "TRI", "IV": "TET", "V": "PEN",
-                  "VI": "HEX", "VII": "HEP", "VIII": "OCT", "IX": "ENE", "X": "DECA"}
+# grafia fonetica: em maiusculas (HEX) a voz soletra letra por letra
+_FALA = {"PRI": "Pri", "DUO": "Duo", "TRI": "Tri", "TET": "Téti", "PEN": "Pen",
+         "HEX": "Réx", "HEP": "Rép", "OCT": "Ócti", "ENE": "Êne", "DEC": "Déca", "DECA": "Déca"}
+_ROMANOS = {"I": "PRI", "II": "DUO", "III": "TRI", "IV": "TET", "V": "PEN",
+            "VI": "HEX", "VII": "HEP", "VIII": "OCT", "IX": "ENE", "X": "DEC"}
+NIVEIS_FALADOS = {**{r: _FALA[n] for r, n in _ROMANOS.items()}, **_FALA}
 _NIVEL = re.compile(r"(?<![\w-])(" + "|".join(sorted(NIVEIS_FALADOS, key=len, reverse=True)) + r")(?![\w-])")
 
 
