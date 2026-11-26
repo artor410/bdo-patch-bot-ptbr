@@ -118,6 +118,17 @@ def embeds_comparacao(r: dict, titulo: str, url: str, url_preview: str) -> list[
     return _montar(f"🟢 {titulo}", url, corpo, COR["patch_sa"], rodape="Atualização SA")
 
 
+def embeds_manual(titulo: str, texto: str, imagem: str) -> list[dict]:
+    """Mensagem escrita pelo dono (comando 'mensagem'). '\\n' digitado vira quebra de linha."""
+    corpo = (texto or "").replace("\\n", "\n").strip()
+    embeds = [{"description": p, "color": COR["patch_sa"]} for p in _quebrar(corpo) or [""]]
+    if titulo.strip():
+        embeds[0]["title"] = titulo.strip()[:256]
+    if imagem.strip():
+        embeds[0]["image"] = {"url": imagem.strip()}
+    return embeds
+
+
 def lembrete(titulo: str, url: str, fim: datetime) -> dict:
     return {
         "title": f"⏳ Acaba em breve: {titulo}"[:256],

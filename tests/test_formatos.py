@@ -1,6 +1,19 @@
 from datetime import datetime, timezone
 
-from bdo_bot.formatos import embeds_evento, embeds_patch, fim_do_evento, lembrete
+from bdo_bot.formatos import embeds_evento, embeds_manual, embeds_patch, fim_do_evento, lembrete
+
+
+def test_mensagem_manual_aceita_quebra_de_linha_escrita_como_barra_n():
+    e = embeds_manual("Aviso", "linha 1\\nlinha 2", imagem="https://img")[0]
+    assert e["title"] == "Aviso"
+    assert e["description"] == "linha 1\nlinha 2"
+    assert e["image"]["url"] == "https://img"
+    assert "footer" not in e  # mensagem do dono nao leva o aviso de IA
+
+
+def test_mensagem_manual_sem_titulo_nem_imagem():
+    e = embeds_manual("", "oi", imagem="")[0]
+    assert "title" not in e and "image" not in e
 
 
 def test_fim_do_evento_converte_brasilia_para_utc():

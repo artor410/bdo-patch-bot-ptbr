@@ -20,7 +20,7 @@ from . import prompts
 from .bot import Bot, agora_utc
 from .discord import Discord
 from .fontes import FONTES, URL_CLASSES, URL_LISTA_KR, Tipo, classificar, e_patch_kr, fontes_para_checar
-from .formatos import COR
+from .formatos import COR, embeds_manual
 from .github_pr import abrir_pr_glossario
 from .glossario import Glossario, Termo
 from .ia import MODELOS_PADRAO, Gemini
@@ -208,6 +208,17 @@ def glossario_inicial(semanas: int) -> None:
     _pr_termos(discord, novos, agora_utc())
 
 
+def mensagem() -> None:
+    """Mensagem manual do dono. Le tudo de variaveis de ambiente (nada passa pelo shell)."""
+    canal = os.environ.get("MSG_CANAL", "")
+    texto = os.environ.get("MSG_TEXTO", "")
+    if canal not in ("patch", "eventos", "loja", "logs") or not texto.strip():
+        sys.exit("canal inválido ou texto vazio")
+    embeds = embeds_manual(os.environ.get("MSG_TITULO", ""), texto, os.environ.get("MSG_IMAGEM", ""))
+    _discord().enviar(canal, embeds)
+    log.info("mensagem enviada para %s", canal)
+
+
 def main(argv: list[str] | None = None) -> None:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
     p = argparse.ArgumentParser(prog="bdo_bot")
@@ -217,6 +228,7 @@ def main(argv: list[str] | None = None) -> None:
     t = sub.add_parser("testar-fonte")
     t.add_argument("fonte", choices=list(FONTES))
     sub.add_parser("testar-vozes")
+    sub.add_parser("mensagem")
     g = sub.add_parser("glossario-inicial")
     g.add_argument("semanas", type=int, nargs="?", default=4)
     a = p.parse_args(argv)
@@ -226,6 +238,8 @@ def main(argv: list[str] | None = None) -> None:
         testar_fonte(a.fonte)
     elif a.comando == "testar-vozes":
         testar_vozes()
+    elif a.comando == "mensagem":
+        mensagem()
     else:
         glossario_inicial(a.semanas)
 
