@@ -21,6 +21,8 @@ log = logging.getLogger(__name__)
 MAX_POR_FONTE = 5          # posts novos processados por fonte em cada execucao
 MAX_TENTATIVAS = 4         # depois disso o post e marcado como visto e o erro vai para #bot-logs
 GUARDAR_VISTOS = 300
+EVENTO_VELHO = timedelta(days=45)  # publicado ha mais tempo: nao anuncia (lista "em andamento" tem eventos velhos)
+EVENTO_SEM_FIM_NOVO = timedelta(days=14)  # sem data de fim, so anuncia se o post for recente
 JANELA_PREVIEW = timedelta(days=4)
 
 
@@ -280,9 +282,19 @@ class Bot:
         del propostos[:-2000]
 
     def _evento(self, item: ItemLista, det: Detalhe, texto: str, termos: list[Termo]) -> None:
+        idade = self.agora - det.publicado if det.publicado else timedelta(0)
+        if idade > EVENTO_VELHO:
+            log.info("evento antigo ignorado: %s", item.titulo)
+            return
         imagens = self._imagens(det.corpo_html, evento=True)
         r = self.ia.json(prompts.evento(texto, termos, bool(imagens)), prompts.SCHEMA_EVENTO, imagens)
         fim = fim_do_evento(r.get("fim_brasilia", ""))
+        if fim and fim <= self.agora:
+            log.info("evento ja encerrado ignorado: %s", item.titulo)
+            return
+        if not fim and idade > EVENTO_SEM_FIM_NOVO:
+            log.info("evento permanente antigo ignorado: %s", item.titulo)
+            return
         if fim and not (self.agora - timedelta(days=1) < fim < self.agora + timedelta(days=200)):
             fim = None  # data improvavel: melhor nao mostrar contagem errada
         if not fim and r.get("fim_brasilia"):

@@ -48,9 +48,10 @@ class Web:
 
 
 class IA:
-    def __init__(self, compara_igual=True):
+    def __init__(self, compara_igual=True, fim_evento="2026-11-27T05:00"):
         self.chamadas = []
         self.compara_igual = compara_igual
+        self.fim_evento = fim_evento
 
     def json(self, prompt, schema, imagens=None, temperatura=0.3):
         props = schema["properties"]
@@ -64,7 +65,7 @@ class IA:
                                 "tipo": "local", "evidencia": "Abismo dos Imortais"}]}
         if "fim_brasilia" in props:
             return {"titulo": "Salve o Banquete", "resumo": "r", "como_participar": ["a"], "recompensas": ["b"],
-                    "periodo": "p", "fim_brasilia": "2026-11-27T05:00", "roteiro_audio": "fala do evento"}
+                    "periodo": "p", "fim_brasilia": self.fim_evento, "roteiro_audio": "fala do evento"}
         if "novidades" in props:
             return {"titulo": "Trajes", "novidades": ["Traje A"], "periodo": ""}
         if "itens" in props and "destaques" not in props:
@@ -367,3 +368,32 @@ def test_falha_em_um_post_nao_marca_como_visto_e_vai_para_erros():
     bot.rodar(["sa_atualizacao"])
     assert "12" not in bot.estado["vistos"]["sa_atualizacao"]
     assert bot.erros and "cota" in bot.erros[0]
+
+
+def _evento_unico(publicado, ia):
+    url = FONTES["sa_eventos"].url_lista
+    return montar({
+        url: lista_sa(("60", "Evento velho")),
+        "https://sa/Detail?groupContentNo=60&countryType=pt-BR": detalhe_sa("Evento velho", "<p>x</p>", publicado),
+    }, {"vistos": {"sa_eventos": []}}, ia)[0]
+
+
+def test_evento_que_ja_terminou_nao_e_anunciado():
+    bot = _evento_unico(AGORA - timedelta(days=10), IA(fim_evento="2025-01-31T23:59"))
+    bot.rodar(["sa_eventos"])
+    assert bot.discord.envios == [] and bot.erros == []
+    assert "60" in bot.estado["vistos"]["sa_eventos"]
+
+
+def test_evento_antigo_sem_data_de_fim_nao_e_anunciado_nem_gasta_ia():
+    ia = IA(fim_evento="")
+    bot = _evento_unico(AGORA - timedelta(days=400), ia)
+    bot.rodar(["sa_eventos"])
+    assert bot.discord.envios == [] and ia.chamadas == []
+    assert "60" in bot.estado["vistos"]["sa_eventos"]
+
+
+def test_evento_permanente_recente_sem_data_de_fim_ainda_e_anunciado():
+    bot = _evento_unico(AGORA - timedelta(days=2), IA(fim_evento=""))
+    bot.rodar(["sa_eventos"])
+    assert len(bot.discord.envios) == 1
