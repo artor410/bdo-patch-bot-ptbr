@@ -1,0 +1,86 @@
+name: bot
+
+on:
+  schedule:
+    - cron: "0 * * * *"    # hora cheia: checa todas as fontes
+    - cron: "30 * * * *"   # meia hora: só as fontes dentro da janela de publicação
+  workflow_dispatch:
+    inputs:
+      comando:
+        description: "O que fazer"
+        type: choice
+        default: rodar
+        options: [rodar, testar-fonte, testar-vozes, glossario-inicial]
+      fonte:
+        description: "Fonte (só para testar-fonte; o resultado vai para #bot-logs)"
+        type: choice
+        default: sea
+        options: [sea, globallab, sa_atualizacao, sa_eventos, sa_loja]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: bot
+  cancel-in-progress: false
+
+jobs:
+  bot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - id: semana
+        run: echo "valor=$(date -u +%G-%V)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache@v4
+        with:
+          path: .cache
+          key: arsha-${{ steps.semana.outputs.valor }}
+          restore-keys: arsha-
+
+      - name: Rodar
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          DISCORD_WEBHOOK_PATCH: ${{ secrets.DISCORD_WEBHOOK_PATCH }}
+          DISCORD_WEBHOOK_EVENTOS: ${{ secrets.DISCORD_WEBHOOK_EVENTOS }}
+          DISCORD_WEBHOOK_LOJA: ${{ secrets.DISCORD_WEBHOOK_LOJA }}
+          DISCORD_WEBHOOK_LOGS: ${{ secrets.DISCORD_WEBHOOK_LOGS }}
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          TTS_VOZ: ${{ vars.TTS_VOZ }}
+          GEMINI_MODELOS: ${{ vars.GEMINI_MODELOS }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMANDO: ${{ inputs.comando || 'rodar' }}
+          FONTE: ${{ inputs.fonte }}
+          AGENDA: ${{ github.event.schedule }}
+        run: |
+          case "$COMANDO" in
+            rodar)
+              if [ "$AGENDA" = "30 * * * *" ]; then python -m bdo_bot rodar --meia-hora; else python -m bdo_bot rodar; fi ;;
+            testar-fonte) python -m bdo_bot testar-fonte "$FONTE" ;;
+            testar-vozes) python -m bdo_bot testar-vozes ;;
+            glossario-inicial) python -m bdo_bot glossario-inicial 4 ;;
+          esac
+
+      - name: Salvar o que já foi visto
+        if: always() && (inputs.comando || 'rodar') == 'rodar'
+        run: |
+          git config user.name "bdo-patch-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/estado.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "estado: $(date -u +%Y-%m-%dT%H:%MZ)"
+          for i in 1 2 3; do
+            git pull --rebase -X theirs origin main && git push origin HEAD:main && exit 0
+            sleep 5
+          done
+          exit 1
