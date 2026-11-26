@@ -1,3 +1,504 @@
 {
-  "termos": []
+  "termos": [
+    {
+      "ko": "불멸의 나락",
+      "en": "Pit of the Undying",
+      "pt": "Abismo Imortal",
+      "tipo": "sistema",
+      "evidencia": "Notas da Atualização – 26 de novembro de 2026 (qui.): Expansão de Dificuldade do Abismo Imortal"
+    },
+    {
+      "ko": "검은 사당",
+      "en": "Black Shrine",
+      "pt": "Santuário Obscuro",
+      "tipo": "sistema",
+      "evidencia": "Notas da Atualização – 26 de novembro de 2026 (qui.): Reorganização de Dificuldade e Recompensas do Santuário Obscuro"
+    },
+    {
+      "ko": "불멸의 까마귀 휘장",
+      "en": "Undying Crow's Insignia",
+      "pt": "Insígnia do Corvo Imortal",
+      "tipo": "item",
+      "evidencia": "Notas da Atualização – 26 de novembro de 2026 (qui.): Insígnias do Corvo obtidas ao concluir as novas Missões de Promoção"
+    },
+    {
+      "ko": "불멸의 증표",
+      "en": "Seal of the Undying",
+      "pt": "Símbolo Imortal",
+      "tipo": "item",
+      "evidencia": "Notas da Atualização – 26 de novembro de 2026 (qui.): a Guilda de Comerciante de Corvo emitiu o novo Símbolo Imortal"
+    },
+    {
+      "ko": "용맹의 증명",
+      "en": "Proof of Valor",
+      "pt": "Prova de Bravura",
+      "tipo": "item",
+      "evidencia": "Notas da Atualização – 26 de novembro de 2026 (qui.): O item Prova de Bravura é usado imediatamente ao ser obtido"
+    },
+    {
+      "ko": "아침의 나라 우두머리 인장",
+      "en": "Morning Light Boss Token",
+      "pt": "Selo de Chefe da Terra do Amanhecer",
+      "tipo": "item",
+      "evidencia": "Notas da Atualização – 26 de novembro de 2026 (qui.): Selo de Chefe da Terra do Amanhecer pode ser obtido diretamente no Baú"
+    },
+    {
+      "ko": "도깨비 부적",
+      "en": "Kkebicharm",
+      "pt": "Amuleto Dokebi",
+      "tipo": "item",
+      "evidencia": "Notas da Atualização – 26 de novembro de 2026 (qui.): Amuleto Dokebi x1 Baú de Essência da Madrugada x1"
+    },
+    {
+      "ko": "태초의 불꽃",
+      "en": "Flame of the Primordial",
+      "pt": "Flama Primordial",
+      "tipo": "item",
+      "evidencia": "Notas da Atualização – 26 de novembro de 2026 (qui.): Flama Primordial Lágrima de Bong-Hwang Lágrima de Haetae"
+    },
+    {
+      "ko": "봉황의 눈물",
+      "en": "Bonghwang's Tear",
+      "pt": "Lágrima de Bong-Hwang",
+      "tipo": "item",
+      "evidencia": "Notas da Atualização – 26 de novembro de 2026 (qui.): Lágrima de Bong-Hwang Lágrima de Haetae Lágrima de Ki-Rin"
+    },
+    {
+      "ko": "해태의 눈물",
+      "en": "Haetae's Tear",
+      "pt": "Lágrima de Haetae",
+      "tipo": "item",
+      "evidencia": "Notas da Atualização – 26 de novembro de 2026 (qui.): Lágrima de Haetae Lágrima de Ki-Rin Pedra de Reforjamento"
+    },
+    {
+      "ko": "기린의 눈물",
+      "en": "Girin's Tear",
+      "pt": "Lágrima de Ki-Rin",
+      "tipo": "item",
+      "evidencia": "Notas da Atualização – 26 de novembro de 2026 (qui.): Lágrima de Ki-Rin Pedra de Reforjamento - PA Total"
+    },
+    {
+      "ko": "마력의 수정 상자",
+      "en": "Magic Crystal Box",
+      "pt": "Baú de Cristal Mágico",
+      "tipo": "item",
+      "evidencia": "Notas da Atualização – 26 de novembro de 2026 (qui.): Adição do novo baú de itens, o Baú de Cristal Mágico"
+    },
+    {
+      "ko": "율호",
+      "en": "Yulho",
+      "pt": "Yulro",
+      "tipo": "chefe",
+      "evidencia": "Notas da Atualização – 26 de novembro de 2026 (qui.): recompensa obtida ao derrotar Yulro, que surge no Abismo Imortal"
+    },
+    {
+      "ko": "지귀",
+      "en": "Jigwi",
+      "pt": "Ji-Gwi",
+      "tipo": "chefe",
+      "evidencia": "Notas da Atualização – 26 de novembro de 2026 (qui.): Ji-Gwi / Bulgasal / Uturi"
+    },
+    {
+      "ko": "불가살",
+      "en": "Bulgasal",
+      "pt": "Bulgasal",
+      "tipo": "chefe",
+      "evidencia": "Notas da Atualização – 26 de novembro de 2026 (qui.): Ji-Gwi / Bulgasal / Uturi"
+    },
+    {
+      "ko": "우투리",
+      "en": "Uturi",
+      "pt": "Uturi",
+      "tipo": "chefe",
+      "evidencia": "Notas da Atualização – 26 de novembro de 2026 (qui.): Ji-Gwi / Bulgasal / Uturi"
+    },
+    {
+      "ko": "흑봉황",
+      "en": "Dark Bonghwang",
+      "pt": "Bong-Hwang Negro",
+      "tipo": "chefe",
+      "evidencia": "Notas da Atualização – 26 de novembro de 2026 (qui.): Bong-Hwang Negro / Bihyung / Menino de Azul"
+    },
+    {
+      "ko": "비형랑",
+      "en": "Bihyung",
+      "pt": "Bihyung",
+      "tipo": "chefe",
+      "evidencia": "Notas da Atualização – 26 de novembro de 2026 (qui.): Bong-Hwang Negro / Bihyung / Menino de Azul"
+    },
+    {
+      "ko": "청의 동자",
+      "en": "Blue-Clad Youth",
+      "pt": "Menino de Azul",
+      "tipo": "chefe",
+      "evidencia": "Notas da Atualização – 26 de novembro de 2026 (qui.): Bong-Hwang Negro / Bihyung / Menino de Azul"
+    },
+    {
+      "ko": "폐세자",
+      "en": "Deposed Crown Prince",
+      "pt": "Príncipe Deserdado",
+      "tipo": "chefe",
+      "evidencia": "Notas da Atualização – 26 de novembro de 2026 (qui.): Príncipe Deserdado"
+    },
+    {
+      "en": "Prime: Embers",
+      "pt": "Forte: Fogo Azul",
+      "tipo": "skill",
+      "evidencia": "Notas da Atualização – 19 de novembro de 2026 (qui.): Forte: Fogo Azul"
+    },
+    {
+      "en": "Prime: Sundering Claw",
+      "pt": "Forte: Garra Dracônica",
+      "tipo": "skill",
+      "evidencia": "Notas da Atualização – 19 de novembro de 2026 (qui.): Forte: Garra Dracônica"
+    },
+    {
+      "en": "Prime: Markthanan's Flourish",
+      "pt": "Forte: Sacrifício de Makhtanan",
+      "tipo": "skill",
+      "evidencia": "Notas da Atualização – 19 de novembro de 2026 (qui.): Forte: Sacrifício de Makhtanan"
+    },
+    {
+      "en": "Prime: Ascent",
+      "pt": "Forte: Ascensão",
+      "tipo": "skill",
+      "evidencia": "Notas da Atualização – 19 de novembro de 2026 (qui.): Forte: Ascensão"
+    },
+    {
+      "en": "Prime: Markthanan's Dominion",
+      "pt": "Forte: Império de Makhtanan",
+      "tipo": "skill",
+      "evidencia": "Notas da Atualização – 19 de novembro de 2026 (qui.): Forte: Império de Makhtanan"
+    },
+    {
+      "en": "Prime: Brimbolt Raze",
+      "pt": "Forte: Giro do Trovão",
+      "tipo": "skill",
+      "evidencia": "Notas da Atualização – 19 de novembro de 2026 (qui.): Forte: Giro do Trovão"
+    },
+    {
+      "en": "Illusion Expansion",
+      "pt": "Portal Quântico",
+      "tipo": "skill",
+      "evidencia": "Notas da Atualização – 19 de novembro de 2026 (qui.): Portal Quântico"
+    },
+    {
+      "en": "Foxflare Fling",
+      "pt": "Flertada da Raposa",
+      "tipo": "skill",
+      "evidencia": "Notas da Atualização – 19 de novembro de 2026 (qui.): Flertada da Raposa"
+    },
+    {
+      "en": "Songakshi",
+      "pt": "Son Gak-Shi",
+      "tipo": "chefe",
+      "evidencia": "Notas da Atualização – 19 de novembro de 2026 (qui.): Son Gak-Shi"
+    },
+    {
+      "en": "Ahib Grand Shaman",
+      "pt": "Grande Feiticeira Ahib",
+      "tipo": "monstro",
+      "evidencia": "Notas da Atualização – 19 de novembro de 2026 (qui.): Grande Feiticeira Ahib"
+    },
+    {
+      "en": "Olun's Golem",
+      "pt": "Colosso Olun",
+      "tipo": "monstro",
+      "evidencia": "Notas da Atualização – 19 de novembro de 2026 (qui.): Colosso Olun"
+    },
+    {
+      "en": "Turo Berserker",
+      "pt": "Berserker Turo",
+      "tipo": "monstro",
+      "evidencia": "Notas da Atualização – 19 de novembro de 2026 (qui.): Berserker Turo"
+    },
+    {
+      "en": "Godslayer: Force Palm",
+      "pt": "Matador de Deuses: Palma Impulsora",
+      "tipo": "skill",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Matador de Deuses: Palma Impulsora"
+    },
+    {
+      "en": "Prime: Forward Slash III",
+      "pt": "Forte: Corte Frontal III",
+      "tipo": "skill",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Forte: Corte Frontal III"
+    },
+    {
+      "en": "Ultimate: Forward Slash",
+      "pt": "Supremo: Corte Frontal",
+      "tipo": "skill",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Supremo: Corte Frontal"
+    },
+    {
+      "en": "Absolute: Penetrating Wind",
+      "pt": "JIN: Vento Perfurante",
+      "tipo": "skill",
+      "evidencia": "corrigido pelo dono"
+    },
+    {
+      "en": "Flow: Air Explosion Shot",
+      "pt": "Fluxo: Explosão Aérea",
+      "tipo": "skill",
+      "evidencia": "corrigido pelo dono"
+    },
+    {
+      "en": "Prime: Decapitation",
+      "pt": "Forte: Decapitação",
+      "tipo": "skill",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Forte: Decapitação"
+    },
+    {
+      "en": "Red: Blooming",
+      "pt": "Flor Escarlate: Dança das Pétalas",
+      "tipo": "skill",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Flor Escarlate: Dança das Pétalas"
+    },
+    {
+      "en": "Venia Riding Attire",
+      "pt": "Roupa de Equitação Venia",
+      "tipo": "item",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Roupa de Equitação Venia"
+    },
+    {
+      "en": "Bloomburst",
+      "pt": "Explosão do Desabrochar",
+      "tipo": "skill",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Explosão do Desabrochar"
+    },
+    {
+      "en": "Perilous Waltz",
+      "pt": "Balé das Almas",
+      "tipo": "skill",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Balé das Almas"
+    },
+    {
+      "en": "Icy Fog",
+      "pt": "Bruma de Gelo",
+      "tipo": "skill",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Bruma de Gelo"
+    },
+    {
+      "en": "Break Orbit",
+      "pt": "Órbita de Escape",
+      "tipo": "skill",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Órbita de Escape"
+    },
+    {
+      "en": "Lunar Halo Inn",
+      "pt": "Estalagem Lunar",
+      "tipo": "local",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Estalagem Lunar"
+    },
+    {
+      "en": "Dancing Marlin Tavern",
+      "pt": "Taverna Marlim-Azul Dançando na Bebida",
+      "tipo": "local",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Taverna Marlim-Azul Dançando na Bebida"
+    },
+    {
+      "en": "Battle Arena",
+      "pt": "Arena Livre",
+      "tipo": "local",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Arena Livre"
+    },
+    {
+      "en": "Hystria Ruins",
+      "pt": "Ruínas Hystria",
+      "tipo": "local",
+      "evidencia": "corrigido pelo dono"
+    },
+    {
+      "en": "Florin Neighborhood Meeting",
+      "pt": "Assembleia de Florin",
+      "tipo": "local",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Assembleia de Florin"
+    },
+    {
+      "en": "Garnier Troupe",
+      "pt": "Trupe Garnier",
+      "tipo": "local",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Trupe Garnier"
+    },
+    {
+      "en": "Heidel's Street",
+      "pt": "Cruzamento de Heidel",
+      "tipo": "local",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Cruzamento de Heidel"
+    },
+    {
+      "en": "Hall of Adventurers",
+      "pt": "Salão do Aventureiro",
+      "tipo": "local",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Salão do Aventureiro"
+    },
+    {
+      "en": "Offin Tett's Radiant Main Weapon",
+      "pt": "Arma Principal Luz de Offin Tett",
+      "tipo": "item",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Arma Principal Luz de Offin Tett"
+    },
+    {
+      "en": "Red Nose's Armor",
+      "pt": "Armadura de Nariz Vermelho",
+      "tipo": "item",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Armadura de Nariz Vermelho"
+    },
+    {
+      "en": "Dim Tree Spirit's Armor",
+      "pt": "Armadura do Espírito da Árvore Tola",
+      "tipo": "item",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Armadura do Espírito da Árvore Tola"
+    },
+    {
+      "en": "Bheg's Gloves",
+      "pt": "Luvas de Bheg",
+      "tipo": "item",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Luvas de Bheg"
+    },
+    {
+      "en": "Aetherion Castle - Jordine",
+      "pt": "Castelo de Aetherion - Jordine",
+      "tipo": "chefe",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Castelo de Aetherion - Jordine"
+    },
+    {
+      "en": "Nymphamaré Castle - Rusalka",
+      "pt": "Castelo de Nymphamaré - Rusalka",
+      "tipo": "chefe",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Castelo de Nymphamaré - Rusalka"
+    },
+    {
+      "en": "Orbita Castle - Enslar",
+      "pt": "Castelo de Orbita - Enslar",
+      "tipo": "chefe",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Castelo de Orbita - Enslar"
+    },
+    {
+      "en": "Tenebraum Castle - Cartian",
+      "pt": "Castelo de Tenebraum - Cartian",
+      "tipo": "chefe",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Castelo de Tenebraum - Cartian"
+    },
+    {
+      "en": "Zephyros Castle - Caphras",
+      "pt": "Castelo de Zephyros - Caphras",
+      "tipo": "chefe",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Castelo de Zephyros - Caphras"
+    },
+    {
+      "en": "Olvia Academy Class 4",
+      "pt": "Turma 4 da Academia de Olvia",
+      "tipo": "sistema",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Turma 4 da Academia de Olvia"
+    },
+    {
+      "en": "Millennial Wild Ginseng",
+      "pt": "Ginseng de Mil Anos",
+      "tipo": "item",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Ginseng de Mil Anos"
+    },
+    {
+      "en": "Lafi Bedmountain's Upgraded Telescope",
+      "pt": "Telescópio Reforçado de Lafi Bedmountain",
+      "tipo": "item",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Telescópio Reforçado de Lafi Bedmountain"
+    },
+    {
+      "en": "Archaeologist's Map",
+      "pt": "Mapa de Arqueólogo",
+      "tipo": "item",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Mapa de Arqueólogo"
+    },
+    {
+      "en": "Traveler's Map",
+      "pt": "Mapa de Viajante",
+      "tipo": "item",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Mapa de Viajante"
+    },
+    {
+      "en": "All Howls' Eve Gloves",
+      "pt": "Luvas Halloween",
+      "tipo": "item",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Luvas Halloween"
+    },
+    {
+      "en": "Sunny Breeze Outfit",
+      "pt": "Traje Brisa da Primavera",
+      "tipo": "item",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Traje Brisa da Primavera"
+    },
+    {
+      "en": "Fox Mask",
+      "pt": "Máscara de Raposa",
+      "tipo": "item",
+      "evidencia": "Notas da Atualização – 12 de novembro de 2026 (qui.): Máscara de Raposa"
+    },
+    {
+      "en": "Shai",
+      "pt": "Shai",
+      "tipo": "classe",
+      "evidencia": "Notas da Atualização – 05 de novembro de 2026 (qui.): [Shai] Correção do erro no qual os movimentos"
+    },
+    {
+      "en": "Khalk",
+      "pt": "Khalk",
+      "tipo": "chefe",
+      "evidencia": "Notas da Atualização – 05 de novembro de 2026 (qui.): combate contra o Khalk em Edania: Interior"
+    },
+    {
+      "en": "Aal",
+      "pt": "Aal",
+      "tipo": "chefe",
+      "evidencia": "Notas da Atualização – 05 de novembro de 2026 (qui.): batalha contra o chefe Aal, encontrado"
+    },
+    {
+      "en": "Golden Pig",
+      "pt": "Porco Dourado",
+      "tipo": "monstro",
+      "evidencia": "corrigido pelo dono"
+    },
+    {
+      "en": "Black Shadow",
+      "pt": "Sombra Negra",
+      "tipo": "chefe",
+      "evidencia": "Notas da Atualização – 05 de novembro de 2026 (qui.): descrição do Conhecimento de Sombra Negra."
+    },
+    {
+      "en": "Musa",
+      "pt": "Musah",
+      "tipo": "classe",
+      "evidencia": "corrigido pelo dono"
+    },
+    {
+      "en": "Asula Highlands",
+      "pt": "Planalto Asula",
+      "tipo": "local",
+      "evidencia": "Notas da Atualização – 05 de novembro de 2026 (qui.): formações de relevo anormais em pontos específicos do Planalto Asula."
+    },
+    {
+      "en": "Hermesia Castle",
+      "pt": "Castelo de Hermesia",
+      "tipo": "local",
+      "evidencia": "Notas da Atualização – 05 de novembro de 2026 (qui.): movimentação de alguns portões do Castelo de Hermesia"
+    },
+    {
+      "en": "Marni Cave Path",
+      "pt": "Trilha da Caverna Marni",
+      "tipo": "local",
+      "evidencia": "Notas da Atualização – 05 de novembro de 2026 (qui.): arbustos flutuavam de forma não natural nos arredores da Trilha da Caverna Marni"
+    },
+    {
+      "en": "Sea Palace",
+      "pt": "Palácio do Mar",
+      "tipo": "local",
+      "evidencia": "Notas da Atualização – 05 de novembro de 2026 (qui.): entrar pela parte superior da entrada do Palácio do Mar."
+    },
+    {
+      "en": "Rawr-Rawr",
+      "pt": "Laurau",
+      "tipo": "chefe",
+      "evidencia": "Notas da Atualização – 05 de novembro de 2026 (qui.): [Semanal] Subjugação de Laurau"
+    }
+  ]
 }
