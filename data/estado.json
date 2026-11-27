@@ -27,6 +27,36 @@
    "lembrado": false,
    "titulo": "[Arena Solare] Lute pela vitória!",
    "url": "https://www.sa.playblackdesert.com/News/Notice/Detail?groupContentNo=8854&countryType=pt-BR"
+  },
+  "8855": {
+   "fim": "2026-12-10T06:00:00+00:00",
+   "lembrado": false,
+   "titulo": "Passe Especial da Solare",
+   "url": "https://www.sa.playblackdesert.com/News/Notice/Detail?groupContentNo=8855&countryType=pt-BR"
+  },
+  "8866": {
+   "fim": "2026-12-03T06:00:00+00:00",
+   "lembrado": false,
+   "titulo": "Bênção de Pérolas para a Black Friday!",
+   "url": "https://www.sa.playblackdesert.com/News/Notice/Detail?groupContentNo=8866&countryType=pt-BR"
+  },
+  "8888": {
+   "fim": "2026-12-17T02:59:00+00:00",
+   "lembrado": false,
+   "titulo": "Presentes de Boas-vindas!",
+   "url": "https://www.sa.playblackdesert.com/News/Notice/Detail?groupContentNo=8888&countryType=pt-BR"
+  },
+  "8889": {
+   "fim": "2026-12-03T02:59:00+00:00",
+   "lembrado": false,
+   "titulo": "[Mês de Shakatu] 1 Chefe. 3 Pacotes.",
+   "url": "https://www.sa.playblackdesert.com/News/Notice/Detail?groupContentNo=8889&countryType=pt-BR"
+  },
+  "8890": {
+   "fim": "2026-12-03T06:00:00+00:00",
+   "lembrado": false,
+   "titulo": "[Mês de Shakatu] Aumento da Febre de Agris",
+   "url": "https://www.sa.playblackdesert.com/News/Notice/Detail?groupContentNo=8890&countryType=pt-BR"
   }
  },
  "previews": [],
@@ -57,7 +87,8 @@
    "19655",
    "19622",
    "19569",
-   "19540"
+   "19540",
+   "34793"
   ],
   "sa_atualizacao": [
    "8919",
@@ -96,7 +127,12 @@
    "8788",
    "8826",
    "8827",
-   "8854"
+   "8854",
+   "8855",
+   "8866",
+   "8888",
+   "8889",
+   "8890"
   ],
   "sa_loja": [
    "8918",
