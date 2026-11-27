@@ -3,7 +3,32 @@
   "evento sem data de fim reconhecida (sem contagem e sem lembrete): Aprimore a Arma Principal Soberana! (Última atualização: 27/11/2025 06:00 UTC-3) -> '2025-11-2": "2026-11-26T18:10:27.276688+00:00",
   "evento sem data de fim reconhecida (sem contagem e sem lembrete): O roubo de Selos dos 10 anos da Deadeye! -> '2025-01-31T23:59'": "2026-11-26T18:10:27.276688+00:00"
  },
- "eventos": {},
+ "eventos": {
+  "8788": {
+   "fim": "2026-12-01T02:59:00+00:00",
+   "lembrado": false,
+   "titulo": "Recompensas de Acesso Diário de Novembro",
+   "url": "https://www.sa.playblackdesert.com/News/Notice/Detail?groupContentNo=8788&countryType=pt-BR"
+  },
+  "8826": {
+   "fim": "2026-12-10T06:00:00+00:00",
+   "lembrado": false,
+   "titulo": "[Passe Especial de Combate] Mais Recompensas!",
+   "url": "https://www.sa.playblackdesert.com/News/Notice/Detail?groupContentNo=8826&countryType=pt-BR"
+  },
+  "8827": {
+   "fim": "2026-12-03T06:00:00+00:00",
+   "lembrado": false,
+   "titulo": "[Mês do Shakatu #1] Presentes Especiais!",
+   "url": "https://www.sa.playblackdesert.com/News/Notice/Detail?groupContentNo=8827&countryType=pt-BR"
+  },
+  "8854": {
+   "fim": "2026-12-03T06:00:00+00:00",
+   "lembrado": false,
+   "titulo": "[Arena Solare] Lute pela vitória!",
+   "url": "https://www.sa.playblackdesert.com/News/Notice/Detail?groupContentNo=8854&countryType=pt-BR"
+  }
+ },
  "previews": [],
  "tentativas": {},
  "termos_propostos": [],
@@ -65,7 +90,12 @@
    "5667",
    "6421",
    "6463",
-   "7237"
+   "7237",
+   "8356",
+   "8788",
+   "8826",
+   "8827",
+   "8854"
   ],
   "sa_loja": [
    "8918",
@@ -117,7 +147,8 @@
    "19860",
    "19844",
    "19833",
-   "19820"
+   "19820",
+   "34786"
   ]
  }
 }
