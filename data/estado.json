@@ -4,6 +4,12 @@
   "evento sem data de fim reconhecida (sem contagem e sem lembrete): O roubo de Selos dos 10 anos da Deadeye! -> '2025-01-31T23:59'": "2026-11-26T18:10:27.276688+00:00"
  },
  "eventos": {
+  "8762": {
+   "fim": "2026-12-07T02:59:00+00:00",
+   "lembrado": false,
+   "titulo": "Obrigado, América do Sul! Festival de Apreciação dos Aventureiros",
+   "url": "https://www.sa.playblackdesert.com/News/Notice/Detail?groupContentNo=8762&countryType=pt-BR"
+  },
   "8788": {
    "fim": "2026-12-01T02:59:00+00:00",
    "lembrado": false,
@@ -57,6 +63,24 @@
    "lembrado": false,
    "titulo": "[Mês de Shakatu] Aumento da Febre de Agris",
    "url": "https://www.sa.playblackdesert.com/News/Notice/Detail?groupContentNo=8890&countryType=pt-BR"
+  },
+  "8894": {
+   "fim": "2026-12-03T02:59:00+00:00",
+   "lembrado": false,
+   "titulo": "[Mês de Shakatu] Recompensas pelo Esforço",
+   "url": "https://www.sa.playblackdesert.com/News/Notice/Detail?groupContentNo=8894&countryType=pt-BR"
+  },
+  "8902": {
+   "fim": "2026-12-03T06:00:00+00:00",
+   "lembrado": false,
+   "titulo": "[Mês de Shakatu] Salve o Banquete!",
+   "url": "https://www.sa.playblackdesert.com/News/Notice/Detail?groupContentNo=8902&countryType=pt-BR"
+  },
+  "8903": {
+   "fim": "2026-12-03T06:00:00+00:00",
+   "lembrado": false,
+   "titulo": "Crie Seu Título Único!",
+   "url": "https://www.sa.playblackdesert.com/News/Notice/Detail?groupContentNo=8903&countryType=pt-BR"
   }
  },
  "previews": [],
@@ -132,7 +156,12 @@
    "8866",
    "8888",
    "8889",
-   "8890"
+   "8890",
+   "8894",
+   "8902",
+   "8903",
+   "6489",
+   "8762"
   ],
   "sa_loja": [
    "8918",
