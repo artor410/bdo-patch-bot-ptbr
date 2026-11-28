@@ -81,6 +81,30 @@
    "lembrado": false,
    "titulo": "Crie Seu Título Único!",
    "url": "https://www.sa.playblackdesert.com/News/Notice/Detail?groupContentNo=8903&countryType=pt-BR"
+  },
+  "8932": {
+   "fim": "2026-12-10T06:00:00+00:00",
+   "lembrado": false,
+   "titulo": "[Mês de Shakatu] A Loja de Derus está de volta!",
+   "url": "https://www.sa.playblackdesert.com/News/Notice/Detail?groupContentNo=8932&countryType=pt-BR"
+  },
+  "8933": {
+   "fim": "2026-12-10T06:00:00+00:00",
+   "lembrado": false,
+   "titulo": "[Mês de Shakatu] Desafio do Presente de Derus",
+   "url": "https://www.sa.playblackdesert.com/News/Notice/Detail?groupContentNo=8933&countryType=pt-BR"
+  },
+  "8934": {
+   "fim": "2026-12-10T06:00:00+00:00",
+   "lembrado": false,
+   "titulo": "Registro Semanal da Guerra de Base",
+   "url": "https://www.sa.playblackdesert.com/News/Notice/Detail?groupContentNo=8934&countryType=pt-BR"
+  },
+  "8935": {
+   "fim": "2027-01-01T02:59:00+00:00",
+   "lembrado": false,
+   "titulo": "Recompensas de Login de Dezembro",
+   "url": "https://www.sa.playblackdesert.com/News/Notice/Detail?groupContentNo=8935&countryType=pt-BR"
   }
  },
  "previews": [],
@@ -161,7 +185,11 @@
    "8902",
    "8903",
    "6489",
-   "8762"
+   "8762",
+   "8932",
+   "8933",
+   "8934",
+   "8935"
   ],
   "sa_loja": [
    "8918",
